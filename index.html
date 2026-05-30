@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProTrade Analytics</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      background: #f8f7f2;
+      color: #111827;
+      font-family: Arial, sans-serif;
+    }
+
+    .sidebar {
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: #374151;
+      font-size: 16px;
+      transition: 0.2s;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-active {
+      background: #00245c;
+      color: white;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    }
+
+    .blue-text { color: #00245c; }
+
+    .chart-container { height: 310px; }
+    .big-chart { height: 520px; }
+
+    .progress-line {
+      height: 6px;
+      background: #eeeeee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 9.55%;
+      background: #00245c;
+      border-radius: 999px;
+    }
+
+    .calendar-day {
+      height: 120px;
+      border: 1px solid #edf0f2;
+      border-radius: 10px;
+      background: #fff;
+      padding: 14px;
+      color: #c7ccd4;
+      font-size: 22px;
+    }
+
+    .calendar-selected {
+      border: 3px solid #2f61b3;
+      color: #00245c;
+      font-weight: bold;
+    }
+
+    .calendar-today {
+      background: #e7ebf0;
+      color: #00245c;
+      font-weight: bold;
+    }
+
+    .gauge {
+      width: 250px;
+      height: 130px;
+      border-top-left-radius: 260px;
+      border-top-right-radius: 260px;
+      border: 20px solid #c91d23;
+      border-bottom: 0;
+      position: relative;
+      margin: 30px auto 0;
+    }
+
+    .gauge::after {
+      content: "";
+      position: absolute;
+      right: -20px;
+      top: 55px;
+      width: 58px;
+      height: 58px;
+      background: #087a3b;
+      border-top-right-radius: 90px;
+    }
+
+    @media(max-width: 768px) {
+      aside { display: none; }
+      main { padding: 16px !important; }
+      .calendar-day { height: 80px; font-size: 16px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex min-h-screen">
+
+    <aside class="sidebar w-64 min-h-screen p-4 flex flex-col">
+      <h1 class="text-2xl font-bold blue-text mb-8">ProTrade</h1>
+
+      <nav class="space-y-2">
+        <a class="sidebar-link sidebar-active" href="#">▦ Dashboard</a>
+        <a class="sidebar-link" href="trades.html">≋ Trades</a>
+        <a class="sidebar-link" href="#">✧ AI Journal</a>
+        <a class="sidebar-link" href="#">▣ Calendar</a>
+        <a class="sidebar-link" href="#">▥ Analytics</a>
+        <a class="sidebar-link" href="#">♙ Psychology</a>
+        <a class="sidebar-link" href="#">⚙ Settings</a>
+      </nav>
+
+      <!-- Profile Section -->
+      <div class="mt-auto pt-6 border-t border-gray-200 sticky bottom-0 bg-white">
+        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 cursor-pointer">
+          <div class="w-12 h-12 rounded-full bg-[#00245c] text-white flex items-center justify-center font-bold text-lg">
+            GK
+          </div>
+
+          <div>
+            <p class="font-semibold text-gray-900">Gautam Kushwha</p>
+            <p class="text-sm text-gray-500">Active Trader</p>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="flex-1 p-8">
+
+      <header class="flex justify-between items-center mb-8">
+        <div>
+          <h2 class="text-4xl font-bold">Trading Dashboard</h2>
+          <p class="text-gray-500 mt-2">Accounts, rewards, risk, and execution in one view.</p>
+        </div>
+
+        <span class="bg-green-100 text-green-700 px-4 py-2 rounded-lg">
+          ● Active Trader
+        </span>
+      </header>
+
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-8">
+        <div class="card p-5">
+          <p class="text-gray-500">Win Rate</p>
+          <h3 class="text-3xl font-bold blue-text">26.83%</h3>
+        </div>
+
+        <div class="card p-5">
+          <p class="text-gray-500">Total P&L</p>
+          <h3 class="text-3xl font-bold text-red-600">-$430.97</h3>
+        </div>
+
+        <div class="card p-5">
+          <p class="text-gray-500">Returns</p>
+          <h3 class="text-3xl font-bold blue-text">9.55%</h3>
+        </div>
+
+        <div class="card p-5">
+          <p class="text-gray-500">Total Trades</p>
+          <h3 class="text-3xl font-bold">123</h3>
+        </div>
+
+        <div class="card p-5">
+          <p class="text-gray-500">Average RR</p>
+          <h3 class="text-3xl font-bold blue-text">1:0</h3>
+        </div>
+
+        <div class="card p-5">
+          <p class="text-gray-500">Balance</p>
+          <h3 class="text-3xl font-bold">$4.64k</h3>
+        </div>
+      </section>
+
+      <!-- Account Balance -->
+      <section class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-semibold">Account Balance</h3>
+          <button class="card px-5 py-2 text-gray-600">▣ Pick date range</button>
+        </div>
+
+        <div class="card p-6 relative">
+          <div class="big-chart">
+            <canvas id="accountBalanceChart"></canvas>
+          </div>
+
+          <div class="absolute left-8 bottom-20 bg-[#00245c] text-white px-3 py-2 rounded-lg text-sm font-bold">
+            $4.64k <span class="border-l border-white/40 ml-2 pl-2">Balance</span>
+          </div>
+
+          <div class="absolute left-8 bottom-8 bg-gray-600 text-white px-3 py-2 rounded-lg text-sm font-bold">
+            $4.64k <span class="border-l border-white/40 ml-2 pl-2">Equity</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Calendar Daily Summary -->
+      <section class="mb-8">
+        <div class="flex justify-between items-center mb-5">
+          <h3 class="text-xl font-semibold">Daily Summary</h3>
+          <button class="card px-5 py-2 font-semibold">▣ Share</button>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+
+          <div class="xl:col-span-2">
+            <div class="flex justify-between items-center mb-6">
+              <div class="flex items-center gap-4">
+                <button class="w-12 h-12 rounded-lg bg-gray-200 text-2xl">‹</button>
+                <h3 class="text-xl font-bold px-8">May 2026</h3>
+                <button class="w-12 h-12 rounded-lg card text-2xl">›</button>
+                <button class="card px-5 py-3 text-gray-500">▣ Today</button>
+              </div>
+
+              <div class="card px-5 py-3">
+                PnL: <b>$0.00</b>
+                <span class="mx-3 text-gray-300">|</span>
+                Days: <b>0</b>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-7 text-center mb-4 text-gray-700">
+              <div>Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
+            </div>
+
+            <div class="grid grid-cols-7 gap-1">
+              <div class="calendar-day bg-gray-50"></div>
+              <div class="calendar-day bg-gray-50"></div>
+              <div class="calendar-day bg-gray-50"></div>
+              <div class="calendar-day bg-gray-50"></div>
+              <div class="calendar-day bg-gray-50"></div>
+              <div class="calendar-day">1</div>
+              <div class="calendar-day">2</div>
+
+              <div class="calendar-day">3</div>
+              <div class="calendar-day">4</div>
+              <div class="calendar-day calendar-selected">5</div>
+              <div class="calendar-day">6</div>
+              <div class="calendar-day">7</div>
+              <div class="calendar-day">8</div>
+              <div class="calendar-day">9</div>
+
+              <div class="calendar-day">10</div>
+              <div class="calendar-day">11</div>
+              <div class="calendar-day">12</div>
+              <div class="calendar-day">13</div>
+              <div class="calendar-day">14</div>
+              <div class="calendar-day">15</div>
+              <div class="calendar-day">16</div>
+
+              <div class="calendar-day">17</div>
+              <div class="calendar-day">18</div>
+              <div class="calendar-day">19</div>
+              <div class="calendar-day">20</div>
+              <div class="calendar-day">21</div>
+              <div class="calendar-day">22</div>
+              <div class="calendar-day">23</div>
+
+              <div class="calendar-day">24</div>
+              <div class="calendar-day">25</div>
+              <div class="calendar-day">26</div>
+              <div class="calendar-day">27</div>
+              <div class="calendar-day">28</div>
+              <div class="calendar-day">29</div>
+              <div class="calendar-day calendar-today">30</div>
+
+              <div class="calendar-day">31</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-lg mb-5">Weekly Summary</h3>
+
+            <div class="space-y-3">
+              <div class="card p-5">
+                <div class="flex justify-between mb-5">
+                  <b>Week One</b>
+                  <span>Apr 26 - May 2</span>
+                </div>
+                <p class="text-gray-600 text-lg">No trades</p>
+              </div>
+
+              <div class="card p-5">
+                <div class="flex justify-between mb-5">
+                  <b>Week Two</b>
+                  <span>May 3 - May 9</span>
+                </div>
+                <p class="text-gray-600 text-lg">No trades</p>
+              </div>
+
+              <div class="card p-5">
+                <div class="flex justify-between mb-5">
+                  <b>Week Three</b>
+                  <span>May 10 - May 16</span>
+                </div>
+                <p class="text-gray-600 text-lg">No trades</p>
+              </div>
+
+              <div class="card p-5">
+                <div class="flex justify-between mb-5">
+                  <b>Week Four</b>
+                  <span>May 17 - May 23</span>
+                </div>
+                <p class="text-gray-600 text-lg">No trades</p>
+              </div>
+
+              <div class="card p-5">
+                <div class="flex justify-between mb-5">
+                  <b>Week Five</b>
+                  <span>May 24 - May 30</span>
+                </div>
+                <p class="text-gray-600 text-lg">No trades</p>
+              </div>
+
+              <div class="card p-5">
+                <div class="flex justify-between mb-5">
+                  <b>Week Six</b>
+                  <span>May 31 - Jun 6</span>
+                </div>
+                <p class="text-gray-600 text-lg">No trades</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Profit Target -->
+      <section class="card p-5 mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h3 class="text-xl font-semibold">Goal Target ⓘ</h3>
+            <p class="text-gray-600 mt-3">$47.76 of $500.00 Profit Achieved</p>
+          </div>
+          <p class="font-semibold">Progress: 9.55%</p>
+        </div>
+        <div class="progress-line">
+          <div class="progress-fill"></div>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Instrument Profit Analysis</h3>
+          <div class="card p-5">
+            <div class="chart-container">
+              <canvas id="instrumentProfitChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Instrument Volume Analysis</h3>
+          <div class="card p-5">
+            <div class="chart-container">
+              <canvas id="instrumentVolumeChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">PnL Distribution by Duration</h3>
+          <div class="card p-5">
+            <div class="chart-container">
+              <canvas id="durationBarChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-semibold mb-4">PnL by Trade Duration</h3>
+          <div class="card p-5">
+            <div class="chart-container">
+              <canvas id="durationScatterChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    const blue = "#00245c";
+    const green = "#087a3b";
+    const red = "#c91d23";
+
+    new Chart(document.getElementById("accountBalanceChart"), {
+      type: "line",
+      data: {
+        labels: ["Aug 17","","","","Aug 24","","","","Aug 31","","","","Sep 07","","","","Sep 14","","","","Sep 21","","","","Sep 28","","","","Oct 05","",""],
+        datasets: [{
+          data: [5000,5000,5000,5000,5000,5000,5000,4990,4992,4980,4972,5020,5022,5022,5022,5045,5010,5000,4925,4925,4925,4955,4940,4935,4942,4942,4942,4942,4950,4952,4892,4892,4870,4825,4825,4825,4815,4840,4840,4840,4840,4832,4830,4850,4805,4685,4685,4685,4898,4820,4820,4640],
+          borderColor: blue,
+          backgroundColor: "rgba(0,36,92,0.08)",
+          pointBackgroundColor: blue,
+          pointRadius: 4,
+          borderWidth: 3,
+          tension: 0.2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            grid: { color: "#edf0f2" },
+            ticks: { color: "#374151", maxRotation: 0 }
+          },
+          y: {
+            min: 4550,
+            max: 5150,
+            grid: { color: "#edf0f2" },
+            ticks: {
+              color: "#374151",
+              callback: value => "$" + value
+            }
+          }
+        }
+      }
+    });
+
+    new Chart(document.getElementById("instrumentProfitChart"), {
+      type: "bar",
+      data: {
+        labels: ["XAUUSD", "BTCUSD", "EURUSD", "USDJPY", "USDCAD"],
+        datasets: [{
+          data: [-495, -8, 95, 22, -10],
+          backgroundColor: [red, red, green, green, red],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    new Chart(document.getElementById("instrumentVolumeChart"), {
+      type: "bar",
+      data: {
+        labels: ["XAUUSD", "BTCUSD", "EURUSD", "USDJPY", "USDCAD"],
+        datasets: [{
+          data: [3.8, 0.03, 1.05, 0.35, 0.08],
+          backgroundColor: green,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    new Chart(document.getElementById("durationBarChart"), {
+      type: "bar",
+      data: {
+        labels: ["1m 26s", "5m 43s", "14m 5s", "38m 7s", "4h 32m"],
+        datasets: [{
+          data: [-10, -14, -7, -5, 12],
+          backgroundColor: [red, red, red, red, green],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    new Chart(document.getElementById("durationScatterChart"), {
+      type: "scatter",
+      data: {
+        datasets: [
+          {
+            data: [
+              {x:0.1,y:15},{x:0.2,y:5},{x:0.4,y:30},{x:0.5,y:60},{x:1.3,y:100},
+              {x:2.5,y:5},{x:3.2,y:14},{x:4.8,y:12},{x:7.2,y:30}
+            ],
+            backgroundColor: green
+          },
+          {
+            data: [
+              {x:0.1,y:-15},{x:0.2,y:-25},{x:0.3,y:-58},{x:0.5,y:-30},{x:0.8,y:-8},
+              {x:1.2,y:-2},{x:4.1,y:-1},{x:7.9,y:-8}
+            ],
+            backgroundColor: red
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+      }
+    });
+  </script>
+</body>
+</html>
