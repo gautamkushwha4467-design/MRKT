@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trades</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background: #070d0f;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+    }
+
+    .panel {
+      background: #111719;
+      border: 1px solid #263034;
+      border-radius: 16px;
+    }
+
+    .input-dark {
+      background: #080e10;
+      border: 1px solid #263034;
+      color: white;
+      border-radius: 6px;
+      height: 38px;
+      padding: 0 14px;
+      outline: none;
+    }
+
+    .input-dark::placeholder {
+      color: #95a3ad;
+    }
+
+    .chip {
+      border: 1px solid #29343a;
+      color: #9aa8b3;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      background: #0d1315;
+    }
+
+    .table-card {
+      background: #111719;
+      border: 1px solid #263034;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    th {
+      color: #95a3ad;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-align: left;
+      padding: 18px 20px;
+      background: #141a1c;
+      border-bottom: 1px solid #263034;
+    }
+
+    td {
+      padding: 20px;
+      border-bottom: 1px solid #263034;
+      color: #9fb0ba;
+      font-size: 18px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .profit {
+      color: #48ff73;
+      font-weight: 700;
+    }
+
+    .loss {
+      color: #ff3434;
+      font-weight: 700;
+    }
+
+    .long {
+      color: #48ff73;
+    }
+
+    .delete {
+      color: #8b98a3;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .delete:hover {
+      color: #ff3434;
+    }
+
+    @media(max-width: 900px) {
+      .filters {
+        grid-template-columns: 1fr !important;
+      }
+
+      table {
+        min-width: 900px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="p-10">
+
+    <!-- Header -->
+    <header class="flex justify-between items-start mb-8">
+      <div>
+        <h1 class="text-4xl font-bold mb-3">Trades</h1>
+        <p class="text-gray-400 text-lg">2 logged</p>
+      </div>
+
+      <div class="flex gap-3">
+        <button class="bg-[#58d765] text-black px-6 py-3 rounded-lg font-semibold text-lg">
+          + &nbsp; Quick add
+        </button>
+
+        <button class="border border-[#263034] px-6 py-3 rounded-lg font-semibold text-lg">
+          Full form
+        </button>
+      </div>
+    </header>
+
+    <!-- Filters -->
+    <section class="panel p-5 mb-8">
+      <div class="grid grid-cols-6 gap-3 filters mb-4">
+        <div class="relative col-span-2">
+          <span class="absolute left-4 top-2.5 text-gray-400">⌕</span>
+          <input class="input-dark w-full pl-10" placeholder="Search notes, pair, emotion..." />
+        </div>
+
+        <select class="input-dark">
+          <option>All pairs</option>
+          <option>EURUSD</option>
+          <option>XAUUSD</option>
+          <option>BTCUSD</option>
+        </select>
+
+        <select class="input-dark">
+          <option>All sessions</option>
+          <option>London</option>
+          <option>New York</option>
+          <option>Asia</option>
+        </select>
+
+        <select class="input-dark">
+          <option>All setups</option>
+          <option>Trend Continuation</option>
+          <option>Breakout</option>
+        </select>
+
+        <select class="input-dark">
+          <option>Long & short</option>
+          <option>Long</option>
+          <option>Short</option>
+        </select>
+
+        <input class="input-dark" placeholder="dd-mm-yyyy" />
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-gray-400 tracking-wide">MISTAKES</span>
+        <span class="chip">Revenge trade</span>
+        <span class="chip">FOMO entry</span>
+        <span class="chip">Early exit</span>
+        <span class="chip">Late exit</span>
+        <span class="chip">Over-risk</span>
+        <span class="chip">No SL</span>
+        <span class="chip">Moved SL</span>
+        <span class="chip">Overtrading</span>
+      </div>
+    </section>
+
+    <!-- Table -->
+    <section class="table-card">
+      <div class="table-wrap">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr>
+              <th>DATE</th>
+              <th>PAIR</th>
+              <th>DIR</th>
+              <th>SESSION</th>
+              <th>SETUP</th>
+              <th>RR</th>
+              <th>RISK%</th>
+              <th>P&L</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>5/29/2026</td>
+              <td class="text-white font-semibold">EURUSD</td>
+              <td class="long">↗ long</td>
+              <td class="text-white">London</td>
+              <td>Trend Continuation</td>
+              <td class="text-white">0.12R</td>
+              <td>0.14%</td>
+              <td class="profit">$+100.00</td>
+              <td class="delete">🗑</td>
+            </tr>
+
+            <tr>
+              <td>5/29/2026</td>
+              <td class="text-white font-semibold">EURUSD</td>
+              <td class="long">↗ long</td>
+              <td class="text-white">London</td>
+              <td>Breakout</td>
+              <td class="text-white">-0.03R</td>
+              <td>—</td>
+              <td class="loss">$-60.00</td>
+              <td class="delete">🗑</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
